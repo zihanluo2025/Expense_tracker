@@ -34,8 +34,8 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Expense Tracker"),
-        backgroundColor: Colors.deepPurple[800],
+        title: Text("Time Entries"),
+        backgroundColor: Colors.teal,
         foregroundColor: Colors.white,
         bottom: TabBar(
           controller: _tabController,
@@ -43,8 +43,8 @@ class _HomeScreenState extends State<HomeScreen>
           labelColor: Colors.white,
           unselectedLabelColor: Colors.white70,
           tabs: [
-            Tab(text: "By Date"),
-            Tab(text: "By Category"),
+            Tab(text: "All Entries"),
+            Tab(text: "Grouped by projects"),
           ],
         ),
       ),
@@ -53,23 +53,25 @@ class _HomeScreenState extends State<HomeScreen>
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
-              decoration: BoxDecoration(color: Colors.deepPurple),
-              child: Text(
-                'Menu',
-                style: TextStyle(color: Colors.white, fontSize: 24),
+              decoration: BoxDecoration(color: Colors.teal),
+              child: const Center(
+                child: Text(
+                  'Menu',
+                  style: TextStyle(color: Colors.white, fontSize: 24),
+                ),
               ),
             ),
             ListTile(
-              leading: Icon(Icons.category, color: Colors.deepPurple),
-              title: Text('Manage Categories'),
+              leading: Icon(Icons.folder),
+              title: Text('Projects'),
               onTap: () {
                 Navigator.pop(context); // This closes the drawer
                 Navigator.pushNamed(context, '/manage_categories');
               },
             ),
             ListTile(
-              leading: Icon(Icons.tag, color: Colors.deepPurple),
-              title: Text('Manage Tags'),
+              leading: Icon(Icons.assignment),
+              title: Text('Tasks'),
               onTap: () {
                 Navigator.pop(context); // This closes the drawer
                 Navigator.pushNamed(context, '/manage_tags');
@@ -86,7 +88,8 @@ class _HomeScreenState extends State<HomeScreen>
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Colors.yellow,
+        foregroundColor: Colors.white,
         onPressed: () => Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => AddExpenseScreen()),
@@ -102,9 +105,26 @@ class _HomeScreenState extends State<HomeScreen>
       builder: (context, provider, child) {
         if (provider.expenses.isEmpty) {
           return Center(
-            child: Text(
-              "Click the + button to record expenses.",
-              style: TextStyle(color: Colors.grey[600], fontSize: 18),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.hourglass_empty, size: 56, color: Colors.grey[400]),
+                const SizedBox(height: 12),
+                Text(
+                  'No time entries yet !',
+                  style: TextStyle(
+                    color: Colors.grey[700],
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'Tap the + button to add your first entry.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.grey[600], fontSize: 16),
+                ),
+              ],
             ),
           );
         }
@@ -128,16 +148,59 @@ class _HomeScreenState extends State<HomeScreen>
                 child: Icon(Icons.delete, color: Colors.white),
               ),
               child: Card(
-                color: Colors.purple[50],
-                margin: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-                child: ListTile(
-                  title: Text(
-                    "${expense.payee} - \$${expense.amount.toStringAsFixed(2)}",
+                elevation: 3,
+                margin: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 10,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 12,
                   ),
-                  subtitle: Text(
-                    "$formattedDate - Category: ${getCategoryNameById(context, expense.categoryId)}",
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // 左侧内容
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 4),
+                            Text(
+                              "${getCategoryNameById(context, expense.categoryId)} - Task${expense.tag}",
+                              style: TextStyle(color: Colors.grey[700]),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              "Total Time: ${expense.amount.toStringAsFixed(0)} hours", // 你这里换成自己的字段
+                              style: TextStyle(color: Colors.grey[700]),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              "Date: $formattedDate",
+                              style: TextStyle(color: Colors.grey[700]),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              "Note: ${expense.note}",
+                              style: TextStyle(color: Colors.grey[700]),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // 右侧删除图标（视觉上和截图一致）
+                      IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () => provider.removeExpense(expense.id),
+                        tooltip: 'Delete',
+                      ),
+                    ],
                   ),
-                  isThreeLine: true,
                 ),
               ),
             );
@@ -152,9 +215,26 @@ class _HomeScreenState extends State<HomeScreen>
       builder: (context, provider, child) {
         if (provider.expenses.isEmpty) {
           return Center(
-            child: Text(
-              "Click the + button to record expenses.",
-              style: TextStyle(color: Colors.grey[600], fontSize: 18),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.hourglass_empty, size: 56, color: Colors.grey[400]),
+                const SizedBox(height: 12),
+                Text(
+                  'No time entries yet !',
+                  style: TextStyle(
+                    color: Colors.grey[700],
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'Tap the + button to add your first entry.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.grey[600], fontSize: 16),
+                ),
+              ],
             ),
           );
         }
@@ -177,11 +257,11 @@ class _HomeScreenState extends State<HomeScreen>
                 Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
-                    "$categoryName - Total: \$${total.toStringAsFixed(2)}",
+                    "$categoryName",
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.deepPurple,
+                      color: Colors.teal,
                     ),
                   ),
                 ),
@@ -194,13 +274,7 @@ class _HomeScreenState extends State<HomeScreen>
                   itemBuilder: (context, index) {
                     Expense expense = entry.value[index];
                     return ListTile(
-                      leading: Icon(
-                        Icons.monetization_on,
-                        color: Colors.deepPurple,
-                      ),
-                      title: Text(
-                        "${expense.payee} - \$${expense.amount.toStringAsFixed(2)}",
-                      ),
+                      title: Text(" - Task :${expense.tag}"),
                       subtitle: Text(
                         DateFormat('MMM dd, yyyy').format(expense.date),
                       ),

@@ -46,24 +46,14 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.initialExpense == null ? 'Add Expense' : 'Edit Expense',
+          widget.initialExpense == null ? 'Add Time Entry' : 'Edit Time Entry',
         ),
-        backgroundColor: Colors.deepPurple[400],
+        backgroundColor: Colors.teal[400],
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
         child: Column(
           children: [
-            buildTextField(
-              _amountController,
-              'Amount',
-              TextInputType.numberWithOptions(decimal: true),
-            ),
-            buildTextField(_payeeController, 'Payee', TextInputType.text),
-            buildTextField(_noteController, 'note', TextInputType.text),
-            buildDateField(_selectedDate),
-            // buildCategoryDropdown(expenseProvider),
-            // buildTagDropdown(expenseProvider),
             Padding(
               padding: const EdgeInsets.only(
                 bottom: 8.0,
@@ -76,6 +66,17 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
               ), // Adjust the padding as needed
               child: buildTagDropdown(expenseProvider),
             ),
+            buildDateField(_selectedDate),
+            buildTextField(
+              _amountController,
+              'Total time (in hours)',
+              TextInputType.numberWithOptions(decimal: true),
+            ),
+            // buildTextField(_payeeController, 'Payee', TextInputType.text),
+            buildTextField(_noteController, 'note', TextInputType.text),
+
+            // buildCategoryDropdown(expenseProvider),
+            // buildTagDropdown(expenseProvider),
           ],
         ),
       ),
@@ -83,12 +84,12 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
         padding: EdgeInsets.all(8.0),
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.deepPurple,
+            backgroundColor: Colors.teal,
             foregroundColor: Colors.white,
             minimumSize: Size(double.infinity, 50),
           ),
           onPressed: _saveExpense,
-          child: Text('Save Expense'),
+          child: Text('Save Entry'),
         ),
       ),
     );
@@ -194,10 +195,10 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
               child: Text(category.name),
             );
           }).toList()..add(
-            DropdownMenuItem(value: "New", child: Text("Add New Category")),
+            DropdownMenuItem(value: "New", child: Text("Add New Project")),
           ),
       decoration: InputDecoration(
-        labelText: 'Category',
+        labelText: 'Project',
         border: OutlineInputBorder(),
       ),
     );
@@ -233,9 +234,9 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                 child: Text(tag.name),
               );
             }).toList()
-            ..add(DropdownMenuItem(value: "New", child: Text("Add New Tag"))),
+            ..add(DropdownMenuItem(value: "New", child: Text("Add New Task"))),
       decoration: InputDecoration(
-        labelText: 'Tag',
+        labelText: 'Task',
         border: OutlineInputBorder(),
       ),
     );

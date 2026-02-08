@@ -18,10 +18,10 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Add New Category'),
+      title: Text('Add New Project'),
       content: TextField(
         controller: _controller,
-        decoration: InputDecoration(labelText: 'Category Name'),
+        decoration: InputDecoration(labelText: 'Project Name'),
       ),
       actions: [
         TextButton(

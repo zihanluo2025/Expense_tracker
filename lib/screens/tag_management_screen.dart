@@ -8,9 +8,9 @@ class TagManagementScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Manage Tags"),
+        title: Text("Tasks"),
         backgroundColor:
-            Colors.deepPurple, // Themed color similar to your inspirations
+            Colors.teal, // Themed color similar to your inspirations
         foregroundColor: Colors.white,
       ),
       body: Consumer<ExpenseProvider>(
@@ -34,6 +34,8 @@ class TagManagementScreen extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.yellow,
+        foregroundColor: Colors.white,
         onPressed: () {
           showDialog(
             context: context,
